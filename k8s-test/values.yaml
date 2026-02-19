@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: k8s-test
+  pullPolicy: Never
+  tag: "1.0-SNAPSHOT"
+
+service:
+  port: 9400
+  targetPort: 9400

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: promtail
+spec:
+  selector:
+    matchLabels:
+      app: promtail
+  template:
+    metadata:
+      labels:
+        app: promtail
+    spec:
+      containers:
+        - name: promtail
+          image: grafana/promtail
+          ports:
+            - containerPort: 9080
+          volumeMounts:
+            - mountPath: /etc/promtail/config.yml
+              name: config-volume
+              subPath: config.yml
+            - mountPath: /var/log/pods
+              name: host-logs
+            - mountPath: /var/lib/docker/containers
+              name: docker-logs
+              readOnly: true
+      volumes:
+        - name: host-logs
+          hostPath:
+            path: /var/log/pods
+        - name: config-volume
+          configMap:
+            name: promtail
+        - name: docker-logs
+          hostPath:
+            path: /var/lib/docker/containers
